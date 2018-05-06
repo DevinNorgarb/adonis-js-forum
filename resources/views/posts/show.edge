@@ -1,0 +1,116 @@
+@layout('layouts/default')
+
+@section('content')
+  <div class="box">
+    <div class="section">
+      <h4 class="subtitle is-4">
+        {{ post.title }} <span class="tag">{{ post.tag.name }}</span>
+      </h4>
+
+      <article class="media">
+        <div class="media-left">
+          <p class="image is-48x48">
+            <img src="{{ post.user.avatar }}" alt="{{ post.user.username }}">
+          </p>
+        </div>
+        <div class="media-content">
+          <div class="content">
+            <strong>{{ post.user.username }}</strong>
+            <p>{{ post.body }}</p>
+            <small>{{ post.created_at }}</small>
+          </div>
+
+          @if(post.answer)
+            <div class="message is-info">
+              <div class="message-header is-flex">
+                <p>Best answer</p>
+
+                @if(auth.user && auth.user.id == post.user_id)
+                  <a href="#" onclick="event.preventDefault(); document.getElementById('destroy').submit();">Remove best answer</a>
+                @endif
+              </div>
+              <div class="message-body">
+                <article class="media">
+                  <div class="media-left">
+                    <p class="image is-48x48">
+                      <img src="{{ post.answer.user.avatar }}" alt="{{ post.answer.user.username }}">
+                    </p>
+                  </div>
+                  <div class="media-content">
+                    <div class="content">
+                      <strong>{{ post.answer.user.username }}</strong>
+                      <p>{{ post.answer.body }}</p>
+                      <small>{{ post.answer.created_at }}</small>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <form action="{{ route('posts.answer.destroy', { slug: post.slug }) }}?_method=DELETE" method="POST" id="destroy">
+              {{ csrfField() }}
+            </form>
+          @endif
+
+          @each(reply in post.replies)
+            <article class="media">
+              <div class="media-left">
+                <p class="image is-48x48">
+                  <img src="{{ reply.user.avatar }}" alt="{{ reply.user.username }}">
+                </p>
+              </div>
+              <div class="media-content">
+                <div class="content">
+                  <strong>{{ reply.user.username }}</strong>
+                  <p>{{ reply.body }}</p>
+                  <small>
+                    @if(auth.user && auth.user.id == post.user_id)
+                      <a href="#" onclick="event.preventDefault(); document.getElementById('answer-{{ reply.id }}').submit();">Mark as best answer</a>
+                    @endif
+                    {{ reply.created_at }}
+                  </small>
+                </div>
+              </div>
+            </article>
+          @endeach
+
+          @each(reply in post.replies)
+            <form action="{{ route('posts.answer.store', { slug: post.slug }) }}" method="POST" id="answer-{{ reply.id }}">
+              {{ csrfField() }}
+              <input type="hidden" name="answer_id" value="{{ reply.id }}">
+            </form>
+          @endeach
+        </div>
+        <div class="media-right">
+          <span class="has-text-grey-light">
+            {{ post.replies.length }} {{ pluralize('reply', post.replies.length) }}
+          </span>
+        </div>
+      </article>
+    </div>
+
+    <div class="section">
+      @loggedIn
+        <form action="{{ route('posts.reply.store', { slug: post.slug }) }}" method="POST">
+          {{ csrfField() }}
+
+          <div class="field">
+            <div class="control">
+              <label class="label">Reply</label>
+              <textarea name="body" class="textarea{{ hasErrorFor('body') ? ' is-danger' : '' }}">{{ old('body', '') }}</textarea>
+
+              @if(hasErrorFor('body'))
+                <p class="help is-danger">{{ getErrorFor('body') }}</p>
+              @endif
+            </div>
+          </div>
+          <button class="button is-info">Reply</button>
+        </form>
+      @else
+        <div class="notification is-info">
+          Please <a href="{{ route('auth.login') }}">log in</a> to reply to this post!
+        </div>
+      @endloggedIn
+    </div>
+  </div>
+@endsection

@@ -1,0 +1,50 @@
+@layout('layouts/vanilla')
+
+@section('content')
+  <section class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <div class="column is-4 is-offset-4">
+          <h3 class="title has-text-grey">Register</h3>
+          <div class="box">
+            <form action="{{ route('auth.register') }}" method="POST">
+              {{ csrfField() }}
+
+              <div class="field">
+                <div class="control">
+                  <input class="input is-large{{ hasErrorFor('email') ? ' is-danger' : '' }}" name="email" type="email" placeholder="Your email" autofocus="" value="{{ old('email', '') }}">
+
+                  @if(hasErrorFor('email'))
+                    <p class="help is-danger">{{ getErrorFor('email') }}</p>
+                  @endif
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <input class="input is-large{{ hasErrorFor('username') ? ' is-danger' : '' }}" name="username" type="text" placeholder="Choose a username" autofocus="" value="{{ old('username', '') }}">
+
+                  @if(hasErrorFor('username'))
+                    <p class="help is-danger">{{ getErrorFor('username') }}</p>
+                  @endif
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <input class="input is-large{{ hasErrorFor('password') ? ' is-danger' : '' }}" name="password" type="password" placeholder="Choose a password">
+
+                  @if(hasErrorFor('password'))
+                    <p class="help is-danger">{{ getErrorFor('password') }}</p>
+                  @endif
+                </div>
+              </div>
+
+              <button class="button is-block is-info is-large is-fullwidth">Register</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+@endsection

@@ -1,0 +1,23 @@
+@layout('layouts/default')
+
+@section('content')
+  @set('posts', posts.toJSON())
+
+  <div class="box">
+    <div class="section">
+      @if(posts.data.length)
+        @each(post in posts.data)
+          @include('forum.partials._post')
+        @endeach
+      @else
+        <p>There are no posts</p>
+      @endif
+    </div>
+
+    @if(posts.data.length)
+      <div class="section">
+        @!component('common/_pagination', pagination = posts)
+      </div>
+    @endif
+  </div>
+@endsection

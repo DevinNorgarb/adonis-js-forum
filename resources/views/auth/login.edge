@@ -1,0 +1,42 @@
+@layout('layouts/vanilla')
+
+@section('content')
+  <section class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <div class="column is-4 is-offset-4">
+          <h3 class="title has-text-grey">Login</h3>
+          <div class="box">
+            <form action="{{ route('auth.login') }}" method="POST">
+              {{ csrfField() }}
+
+              <div class="field">
+                <div class="control">
+                  <input name="email" class="input is-large{{ hasErrorFor('email') ? ' is-danger' : '' }}" type="email" placeholder="Your email" value="{{ old('email', '') }}">
+
+                  @if(hasErrorFor('email'))
+                    <p class="help is-danger">{{ getErrorFor('email') }}</p>
+                  @endif
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <input name="password" class="input is-large{{ hasErrorFor('password') ? ' is-danger' : '' }}" type="password" placeholder="Your password">
+
+                  @if(hasErrorFor('password'))
+                    <p class="help is-danger">{{ getErrorFor('password') }}</p>
+                  @endif
+                </div>
+              </div>
+              <button class="button is-block is-info is-large is-fullwidth">Login</button>
+            </form>
+          </div>
+          <p class="has-text-grey">
+            <a href="{{ route('auth.register') }}">Register</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+@endsection

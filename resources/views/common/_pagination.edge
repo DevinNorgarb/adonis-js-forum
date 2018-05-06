@@ -1,0 +1,16 @@
+<nav class="pagination" role="navigation">
+
+  <a href="?page={{ parseInt(pagination.page) - 1 }}" class="pagination-previous"{{ pagination.page <= 1 ? 'disabled="disabled"' : '' }}>Previous</a>
+
+  <a href="?page={{ parseInt(pagination.page) + 1 }}" class="pagination-next"{{ pagination.page >= pagination.lastPage ? 'disabled="disabled"' : '' }}>Next page</a>
+
+  <ul class="pagination-list">
+      @each(page in paginationArray(pagination.lastPage))
+        <li>
+          <a href="?page={{ page }}" class="pagination-link{{ pagination.page == page ? ' is-current' : '' }}">
+            {{ page }}
+          </a>
+        </li>
+      @endeach
+  </ul>
+</nav>

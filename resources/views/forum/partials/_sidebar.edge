@@ -1,0 +1,18 @@
+<a href="{{ route('posts.create') }}" class="button is-info is-primary is-block is-medium">New Post</a>
+
+<br>
+
+<aside class="menu">
+  <p class="menu-label">
+    Tags
+  </p>
+  <ul class="menu-list">
+    @each(tag in tags.toJSON())
+      <li>
+        <a class="is-info{{ request.match(['/tag/' + tag.slug]) ? ' is-active' : '' }}" href="{{ route('posts.tags', { slug: tag.slug }) }}">
+          {{ tag.name }}
+        </a>
+      </li>
+    @endeach
+  </ul>
+</aside>
